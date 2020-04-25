@@ -1,28 +1,52 @@
 class Cubie {
   constructor(x, y, z) {
-    this.defaultPos = new p5.Vector(x, y, z); // constant.
-    this.rotation = new p5.Vector(0, 0, 1);
-    this.x = x;
-    this.y = y;
-    this.z = z;
+    this.defaultPos = new p5.Vector(x, y, z); // Actual default position. Always constant.
+    this.pos = new p5.Vector(x, y, z); // Actual position used to draw cube.
+    this.pointer = new p5.Vector(0, 0, 1); // Actual pointer same for all cubies by default.
+
+    // Virtual position used to look at cube from diffrent direction.
+    this.vDefaultPos = new p5.Vector();
+    this.vPos = new p5.Vector();
+
     this.faces = [];
     this.setFaces();
   }
 
+  setViewPort() {
+    switch (orientation) {
+      case 'green':
+        this.vPos.set(this.pos.x, this.pos.y, this.pos.z);
+        this.vDefaultPos.set(this.defaultPos.x, this.defaultPos.y, this.defaultPos.z);
+        break;
+      case 'red':
+        this.vPos.set(-this.pos.z, this.pos.y, this.pos.x);
+        this.vDefaultPos.set(-this.defaultPos.z, this.defaultPos.y, this.defaultPos.x);
+        break;
+      case 'blue':
+        this.vPos.set(-this.pos.x, this.pos.y, -this.pos.z);
+        this.vDefaultPos.set(-this.defaultPos.x, this.defaultPos.y, -this.defaultPos.z);
+        break;
+      case 'orange':
+        this.vPos.set(this.pos.z, this.pos.y, -this.pos.x);
+        this.vDefaultPos.set(this.defaultPos.z, this.defaultPos.y, -this.defaultPos.x);
+        break;
+    }
+  }
+
   setFaces() {
-    if (this.z == 1) {
+    if (this.pos.z == 1) {
       this.faces.push(new Face(new p5.Vector(0, 0, 1), '#abce53', 'G')); // G // +z
-    } else if (this.z == -1) {
+    } else if (this.pos.z == -1) {
       this.faces.push(new Face(new p5.Vector(0, 0, -1), '#3cacde', 'B')); // B // -z
     }
-    if (this.x == 1) {
+    if (this.pos.x == 1) {
       this.faces.push(new Face(new p5.Vector(1, 0, 0), '#dc4b4b', 'R')); // R // +x
-    } else if (this.x == -1) {
+    } else if (this.pos.x == -1) {
       this.faces.push(new Face(new p5.Vector(-1, 0, 0), '#e4773c', 'O')); // O // -x
     }
-    if (this.y == 1) {
+    if (this.pos.y == 1) {
       this.faces.push(new Face(new p5.Vector(0, 1, 0), '#f9e534', 'Y')); // Y // +y
-    } else if (this.y == -1) {
+    } else if (this.pos.y == -1) {
       this.faces.push(new Face(new p5.Vector(0, -1, 0), '#ffffff', 'W')); // W // -y
     }
   }
@@ -35,7 +59,7 @@ class Cubie {
 
   drawCubie() {
     push();
-    translate(new p5.Vector(this.x, this.y, this.z));
+    translate(new p5.Vector(this.pos.x, this.pos.y, this.pos.z));
     strokeWeight(0);
     fill(boxFill);
     box(1);

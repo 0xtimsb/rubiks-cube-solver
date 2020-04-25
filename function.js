@@ -19,9 +19,10 @@ function drawCube() {
     if (abs(t) > HALF_PI) {
       cube.forEach((qb, i) => {
         if (isGoingToMove(qb)) {
-          turnMath(qb, HALF_PI * animateDirection, animateAxis);
-          turnMath(qb.rotation, HALF_PI * animateDirection, animateAxis);
+          turnMath(qb.pos, HALF_PI * animateDirection, animateAxis);
+          turnMath(qb.pointer, HALF_PI * animateDirection, animateAxis);
           qb.turnFaces(animateAxis);
+          qb.setViewPort();
         }
       });
       animate = false;
@@ -50,20 +51,22 @@ function turnMath(vector, angle, axis) {
 }
 
 // Diffrent view to make moves.
-function setView(viewString) {
-  // 'F', 'R', 'B', 'L', 'U', 'D' - Default
-  switch (viewString) {
-    // Main - bottom
-    case 'green-yellow':
+function setView(string) {
+  orientation = string;
+  for (let i = 0; i < cube.length; i++) {
+    cube[i].setViewPort();
+  }
+  switch (orientation) {
+    case 'green':
       view = ['F', 'R', 'B', 'L', 'U', 'D'];
       break;
-    case 'red-yellow':
+    case 'red':
       view = ['L', 'F', 'R', 'B', 'U', 'D'];
       break;
-    case 'blue-yellow':
+    case 'blue':
       view = ['B', 'L', 'F', 'R', 'U', 'D'];
       break;
-    case 'orange-yellow':
+    case 'orange':
       view = ['R', 'B', 'L', 'F', 'U', 'D'];
       break;
   }
@@ -133,15 +136,15 @@ function updateTurn() {
 
 function isGoingToMove(qb) {
   if (abs(animateAxis.x) == 1) {
-    if (qb.x == animateIndex) {
+    if (qb.pos.x == animateIndex) {
       return true;
     }
   } else if (abs(animateAxis.y) == 1) {
-    if (qb.y == animateIndex) {
+    if (qb.pos.y == animateIndex) {
       return true;
     }
   } else if (abs(animateAxis.z) == 1) {
-    if (qb.z == animateIndex) {
+    if (qb.pos.z == animateIndex) {
       return true;
     }
   }

@@ -25,6 +25,7 @@ const defaultRot = new p5.Vector(0, 0, 1); // Default rotation of cubies // To c
 
 // Use to apply algorithms at diffrent direction and rotations.
 let view = [];
+let orientation = '';
 
 function preload() {
   font = loadFont('assets/Montserrat-ExtraBold.ttf');
