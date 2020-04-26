@@ -23,9 +23,10 @@ const yAxis = new p5.Vector(0, 1, 0);
 const zAxis = new p5.Vector(0, 0, 1);
 const defaultRot = new p5.Vector(0, 0, 1); // Default rotation of cubies // To check thier rotation corectness.
 
+let vDefaultRot = new p5.Vector();
+
 // Use to apply algorithms at diffrent direction and rotations.
 let view = [];
-let orientation = '';
 
 function preload() {
   font = loadFont('assets/Montserrat-ExtraBold.ttf');

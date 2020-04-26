@@ -17,15 +17,15 @@ function drawCube() {
 
     t += deltaAngle * animateDirection;
     if (abs(t) > HALF_PI) {
+      animate = false;
+      setView();
       cube.forEach((qb, i) => {
         if (isGoingToMove(qb)) {
           turnMath(qb.pos, HALF_PI * animateDirection, animateAxis);
           turnMath(qb.pointer, HALF_PI * animateDirection, animateAxis);
           qb.turnFaces(animateAxis);
-          qb.setViewPort();
         }
       });
-      animate = false;
     }
   }
 }
@@ -51,23 +51,46 @@ function turnMath(vector, angle, axis) {
 }
 
 // Diffrent view to make moves.
-function setView(string) {
-  orientation = string;
-  for (let i = 0; i < cube.length; i++) {
-    cube[i].setViewPort();
+function setView(qb = null) {
+
+  let orientation;
+
+  if (qb) {
+    if (qb.pos.z == -1 && qb.pos.x != 1) {
+      orientation = 'blue';
+    } else if (qb.pos.x == 1 && qb.pos.z != 1) {
+      orientation = 'red';
+    } else if (qb.pos.x == -1 && qb.pos.z != -1) {
+      orientation = 'orange';
+    } else {
+      orientation = 'green';
+    }
+  } 
+  
+  if (!orientation) {
+    orientation = 'green';
   }
+  
+  for (let i = 0; i < cube.length; i++) {
+    cube[i].setViewPort(orientation);
+  }
+  
   switch (orientation) {
     case 'green':
       view = ['F', 'R', 'B', 'L', 'U', 'D'];
+      vDefaultRot.set(defaultRot.x, defaultRot.y, defaultRot.z);
       break;
     case 'red':
       view = ['L', 'F', 'R', 'B', 'U', 'D'];
+      vDefaultRot.set(-defaultRot.z, defaultRot.y, defaultRot.x);
       break;
     case 'blue':
       view = ['B', 'L', 'F', 'R', 'U', 'D'];
+      vDefaultRot.set(-defaultRot.x, defaultRot.y, -defaultRot.z);
       break;
     case 'orange':
       view = ['R', 'B', 'L', 'F', 'U', 'D'];
+      vDefaultRot.set(defaultRot.z, defaultRot.y, -defaultRot.x);
       break;
   }
 }

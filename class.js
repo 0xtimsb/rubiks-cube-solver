@@ -7,28 +7,33 @@ class Cubie {
     // Virtual position used to look at cube from diffrent direction.
     this.vDefaultPos = new p5.Vector();
     this.vPos = new p5.Vector();
+    this.vPointer = new p5.Vector();
 
     this.faces = [];
     this.setFaces();
   }
 
-  setViewPort() {
+  setViewPort(orientation) {
     switch (orientation) {
       case 'green':
         this.vPos.set(this.pos.x, this.pos.y, this.pos.z);
         this.vDefaultPos.set(this.defaultPos.x, this.defaultPos.y, this.defaultPos.z);
+        this.vPointer.set(this.pointer.x, this.pointer.y, this.pointer.z);
         break;
       case 'red':
         this.vPos.set(-this.pos.z, this.pos.y, this.pos.x);
         this.vDefaultPos.set(-this.defaultPos.z, this.defaultPos.y, this.defaultPos.x);
+        this.vPointer.set(-this.pointer.z, this.pointer.y, this.pointer.x);
         break;
       case 'blue':
         this.vPos.set(-this.pos.x, this.pos.y, -this.pos.z);
         this.vDefaultPos.set(-this.defaultPos.x, this.defaultPos.y, -this.defaultPos.z);
+        this.vPointer.set(-this.pointer.x, this.pointer.y, -this.pointer.z);
         break;
       case 'orange':
         this.vPos.set(this.pos.z, this.pos.y, -this.pos.x);
         this.vDefaultPos.set(this.defaultPos.z, this.defaultPos.y, -this.defaultPos.x);
+        this.vPointer.set(this.pointer.z, this.pointer.y, -this.pointer.x);
         break;
     }
   }
