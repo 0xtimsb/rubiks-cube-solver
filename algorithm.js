@@ -67,29 +67,26 @@ function makeSideEdges() {
 function makeSideEdgesQb(qb) {
   // At top layer. Middle.
   if (qb.vPos.y == -1) {
-    // if (qb.vPos.x == qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) { // If default location is at bottom.
-    //   if (qb.vPointer.equals(vDefaultRot)) { // Conditions to place at perfect orientation.
-    //     pushTurns(['~U', '~F', 'U', 'F']);
-    //   } else {
-    //     pushTurns(['U', 'R', '~U', '~R']);
-    //   }
-    // } else if (qb.vPos.x != qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) {
-    //   pushTurns(['U']);
-    // } else {
-    //   pushTurns(['~U']);
-    // }
+    if (qb.vDefaultPos.x == 1 && qb.vDefaultPos.z == 1) { // If default location is at right-middle.
+      pushTurns(['U', 'R', '~U', '~R', '~U', '~F', 'U', 'F']);
+    } else if (qb.vDefaultPos.x == -1 && qb.vDefaultPos.z == 1) {
+      pushTurns(['U']);
+    } else if (qb.vDefaultPos.x == 1 && qb.vDefaultPos.z == -1) {
+      pushTurns(['~U']);
+    } else {
+      pushTurns(['~U', '~U']);
+    }
   } else { // At middle layer. Right.
-    // if (qb.vPos.x == qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) { // If default location is at bottom.
-    //   // Conditions to place at perfect orientation.
-    //   if (qb.vPointer.equals(vDefaultRot) == false) { // If at place, but at wrong orientation.
-    //     pushTurns(['R', 'U', '~R', '~U', '~U', '~F', 'U', 'F']);
-    //     console.log('moka');
-    //   }
-    // } else if (qb.vPos.x != qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) { // At other side
-    //   pushTurns(['R', 'U', '~R']); // Will put it on the top of other exact side.
-    // } else { // At other side side OR diagonal side.
-    //   pushTurns(['~F', '~U', 'F']);
-    // }
+    if (qb.vPos.x == qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) { // If default location is at middle.
+      // Conditions to place at perfect orientation.
+      if (qb.vPointer.equals(vDefaultRot) == false) { // If at place, but at wrong orientation.
+        pushTurns(['R', '~U', '~R', 'U', 'R', '~U', '~R', 'U', 'R', 'U', 'U', '~R', '~F', 'U', 'U', 'F']);
+      }
+    } else if (qb.vPos.x != qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) { // At other side
+      pushTurns(['U', 'R', '~U', '~R', '~U', '~F', 'U', 'F']); // Will put it on the top - middle.
+    } else { // At other side side OR diagonal side.
+      pushTurns(['U', 'R', '~U', '~R', '~U', '~F', 'U', 'F', '~U']); // Will put it on other middle.
+    }
   }
 }
 
@@ -127,7 +124,6 @@ function makeBottomCornerQb(qb) {
       // Conditions to place at perfect orientation.
       if (qb.vPointer.equals(vDefaultRot) == false) { // If at place, but at wrong orientation.
         pushTurns(['R', 'U', '~R', '~U', '~U', '~F', 'U', 'F']);
-        console.log('moka');
       }
     } else if (qb.vPos.x != qb.vDefaultPos.x && qb.vPos.z == qb.vDefaultPos.z) { // At other side
       pushTurns(['R', 'U', '~R']); // Will put it on the top of other exact side.
@@ -193,7 +189,7 @@ function makeBottomPlusQb(qb) {
 function getCubiesAtYDefault(yIndex) {
   result = [];
   for (let i = 0; i < cube.length; i++) {
-    if (cube[i].pos.y == yIndex) {
+    if (cube[i].defaultPos.y == yIndex) {
       result.push(cube[i]);
     }
   }
