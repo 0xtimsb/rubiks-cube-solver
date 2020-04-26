@@ -44,14 +44,16 @@ function play() {
       case 3:
         if (makeTopCross()) {
           playStep++;
+          console.log('cross');
         }
         break;
       case 4:
         if (makeTopWhite()) {
           playStep++;
         }
+        break;
       case 5:
-        console.log('Done');
+          console.log('Done');
         break;
     }
   }
@@ -62,7 +64,28 @@ function makeTopWhite() {
   if (topCorners.every((c) => c.pointer.equals(defaultRot))) {
     return true;
   } else {
-    
+    for (let i = 0; i < topCorners.length; i++) {
+      let qb = topCorners[i];
+      setView(qb);
+      if (checkProperState(topCorners)) {
+        return false;
+      }
+    }
+  }
+}
+
+function checkProperState(topCorners) {
+  if (topCorners.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 1 && qb.vPointer.y != -1)) {
+    pushTurns(['R','U','~R','U','R','U', 'U','~R']);
+    return true;
+  } else {
+    if (topCorners.some((qb) => qb.vPos.x == 1 && qb.vPos.z == 1 && qb.vPointer.z == 1)) {
+      pushTurns(['R','U','~R','U','R','U', 'U','~R']);
+      return true;
+    } else {
+      pushTurns(['U','U','R','U','U','~R','~U','R','~U','~R']);
+      return true;
+    }
   }
 }
 
@@ -99,7 +122,6 @@ function checkLSign(topCrossCubies) {
   // Check if L sign is made.
   if (topCrossCubies.some((qb) => qb.vPos.x == 0 && qb.vPos.z == -1 && qb.vPointer == vDefaultRot)) {
     if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
-      console.log('L-Sign');
       pushTurns(['F','U','R','~U','~R','~F']);
       return true;
     }
@@ -112,7 +134,6 @@ function checkHorizontal(topCrossCubies) {
   // Check if horizontal line is made.
   if (topCrossCubies.some((qb) => qb.vPos.x == 1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
     if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
-      console.log('horizontal');
       pushTurns(['F','R','U','~R','~U','~F']);
       return true;
     }
