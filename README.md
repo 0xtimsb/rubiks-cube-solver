@@ -1,1 +1,1 @@
-# rubicks-cube-visualizer
+# Rubik's Cube AI
