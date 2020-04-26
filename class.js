@@ -2,7 +2,7 @@ class Cubie {
   constructor(x, y, z) {
     this.defaultPos = new p5.Vector(x, y, z); // Actual default position. Always constant.
     this.pos = new p5.Vector(x, y, z); // Actual position used to draw cube.
-    this.pointer = new p5.Vector(0, 0, 1); // Actual pointer same for all cubies by default.
+    this.pointer = new p5.Vector(0, -1, 0); // Actual pointer same for all cubies by default.
 
     // Virtual position used to look at cube from diffrent direction.
     this.vDefaultPos = new p5.Vector();

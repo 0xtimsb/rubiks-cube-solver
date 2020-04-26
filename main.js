@@ -13,7 +13,7 @@ let animateDirection = -1; // Clockwise, Anti-Clockwise to rotate. (+1, -1)
 let turnQueue = []; // Keep track of turns clicked.
 
 // Settings for cube.
-let deltaAngle = 0.1; //0.25 // Radian to be moved.
+let deltaAngle = 0.25; //0.25 // Radian to be moved.
 const wallHeight = 1.01; // Cubie wall height relative to origin.
 const wallScale = 0.97; // Cubie wall scale.
 const boxFill = 30;
@@ -21,7 +21,7 @@ const backgroundFill = 40;
 const xAxis = new p5.Vector(1, 0, 0);
 const yAxis = new p5.Vector(0, 1, 0);
 const zAxis = new p5.Vector(0, 0, 1);
-const defaultRot = new p5.Vector(0, 0, 1); // Default rotation of cubies // To check thier rotation corectness.
+const defaultRot = new p5.Vector(0, -1, 0); // Default rotation of cubies // To check thier rotation corectness.
 
 let vDefaultRot = new p5.Vector();
 

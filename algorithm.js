@@ -42,12 +42,83 @@ function play() {
         }
         break;
       case 3:
+        if (makeTopCross()) {
+          playStep++;
+        }
+        break;
+      case 4:
+        if (makeTopWhite()) {
+          playStep++;
+        }
+      case 5:
         console.log('Done');
         break;
     }
   }
 }
 
+function makeTopWhite() {
+  let topCorners = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x) + abs(qb.defaultPos.z) == 2);
+  if (topCorners.every((c) => c.pointer.equals(defaultRot))) {
+    return true;
+  } else {
+    
+  }
+}
+
+function makeTopCross() {
+  let topCrossCubies = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x + qb.defaultPos.z) == 1);
+  if (topCrossCubies.every((c) => c.pointer.equals(defaultRot))) {
+    return true;
+  } else {
+    for (let a = 0; a < 3; a++) {
+      for (let i = 0; i < topCrossCubies.length; i++) {
+        let qb = topCrossCubies[i];
+        setView(qb);
+        switch(a) {
+          case 0:
+            if (checkHorizontal(topCrossCubies)) {
+              return false;
+            }
+            break;
+          case 1:
+            if (checkLSign(topCrossCubies)) {
+              return false;
+            }
+            break;
+          case 2:
+            pushTurns(['F','U','R','~U','~R','~F']);
+            return false;
+        }
+      }
+   }
+  }
+}
+
+function checkLSign(topCrossCubies) {
+  // Check if L sign is made.
+  if (topCrossCubies.some((qb) => qb.vPos.x == 0 && qb.vPos.z == -1 && qb.vPointer == vDefaultRot)) {
+    if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
+      console.log('L-Sign');
+      pushTurns(['F','U','R','~U','~R','~F']);
+      return true;
+    }
+  }
+  return false;
+}
+
+
+function checkHorizontal(topCrossCubies) {
+  // Check if horizontal line is made.
+  if (topCrossCubies.some((qb) => qb.vPos.x == 1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
+    if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
+      console.log('horizontal');
+      pushTurns(['F','R','U','~R','~U','~F']);
+      return true;
+    }
+  }
+  return false;
+}
 
 function makeSideEdges() {
   let sideEdgeCubies = getCubiesAtYDefault(0).filter((qb) => abs(qb.defaultPos.x) + abs(qb.defaultPos.z) == 2);
