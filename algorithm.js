@@ -44,18 +44,49 @@ function play() {
       case 3:
         if (makeTopCross()) {
           playStep++;
-          console.log('cross');
         }
         break;
       case 4:
         if (makeTopWhite()) {
           playStep++;
+          console.log('top');
         }
         break;
       case 5:
-          console.log('Done');
+        if (alignWhiteCorners()) {
+          playStep++;
+        }
         break;
+      case 6:
+        console.log('Done');
+      break;
     }
+  }
+}
+
+function makeWhiteCorners() {
+  let topCorners = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x) + abs(qb.defaultPos.z) == 2);
+  if (topCorners.every((c) => c.pointer.equals(defaultRot))) {
+    return true;
+  } else {
+    for (let a = 0; a < 2; a++) {
+      for (let i = 0; i < topCorners.length; i++) {
+        let qb = topCorners[i];
+        setView(qb);
+        switch(a) {
+          case 0:
+            if (checkAdjacentCorners(topCorners)) {
+              return false;
+            }
+            break;
+          case 1:
+            if (checkDiagonalCorners(topCorners)) {
+              return false;
+            }
+            break;
+        }
+      }
+   }
   }
 }
 
@@ -64,30 +95,33 @@ function makeTopWhite() {
   if (topCorners.every((c) => c.pointer.equals(defaultRot))) {
     return true;
   } else {
-    for (let i = 0; i < topCorners.length; i++) {
-      let qb = topCorners[i];
-      setView(qb);
-      if (checkProperState(topCorners)) {
-        return false;
+    for (let a = 0; a < 2; a++) {
+      for (let i = 0; i < topCorners.length; i++) {
+        let qb = topCorners[i];
+        setView(qb);
+        switch(a) {
+          case 0:
+            if (checkTopCorner(topCorners)) {
+              return false;
+            }
+            break;
+          case 1:
+            pushTurns(['R','U','~R','U','R','U','U','~R']);
+            return false;
+        }
       }
-    }
+   }
   }
 }
 
-function checkProperState(topCorners) {
-  if (topCorners.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 1 && qb.vPointer.y != -1)) {
-    pushTurns(['R','U','~R','U','R','U', 'U','~R']);
+function checkTopCorner(topCorners) {
+  if (topCorners.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 1 && qb.vPointer.equals(vDefaultRot))) {
+    pushTurns(['R','U','~R','U','R','U','U','~R']);
     return true;
-  } else {
-    if (topCorners.some((qb) => qb.vPos.x == 1 && qb.vPos.z == 1 && qb.vPointer.z == 1)) {
-      pushTurns(['R','U','~R','U','R','U', 'U','~R']);
-      return true;
-    } else {
-      pushTurns(['U','U','R','U','U','~R','~U','R','~U','~R']);
-      return true;
-    }
   }
+  return false;
 }
+
 
 function makeTopCross() {
   let topCrossCubies = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x + qb.defaultPos.z) == 1);
@@ -110,7 +144,7 @@ function makeTopCross() {
             }
             break;
           case 2:
-            pushTurns(['F','U','R','~U','~R','~F']);
+            pushTurns(['F','U','R','~U','~R','~F', 'U']);
             return false;
         }
       }
@@ -120,8 +154,8 @@ function makeTopCross() {
 
 function checkLSign(topCrossCubies) {
   // Check if L sign is made.
-  if (topCrossCubies.some((qb) => qb.vPos.x == 0 && qb.vPos.z == -1 && qb.vPointer == vDefaultRot)) {
-    if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
+  if (topCrossCubies.some((qb) => qb.vPos.x == 0 && qb.vPos.z == -1 && qb.vPointer.equals(vDefaultRot))) {
+    if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer.equals(vDefaultRot))) {
       pushTurns(['F','U','R','~U','~R','~F']);
       return true;
     }
@@ -132,9 +166,9 @@ function checkLSign(topCrossCubies) {
 
 function checkHorizontal(topCrossCubies) {
   // Check if horizontal line is made.
-  if (topCrossCubies.some((qb) => qb.vPos.x == 1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
-    if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer == vDefaultRot)) {
-      pushTurns(['F','R','U','~R','~U','~F']);
+  if (topCrossCubies.some((qb) => qb.vPos.x == 1 && qb.vPos.z == 0 && qb.vPointer.equals(vDefaultRot))) {
+    if (topCrossCubies.some((qb) => qb.vPos.x == -1 && qb.vPos.z == 0 && qb.vPointer.equals(vDefaultRot))) {
+      pushTurns(['F','U','R','~U','~R','~F']);
       return true;
     }
   }
