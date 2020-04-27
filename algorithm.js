@@ -49,7 +49,6 @@ function play() {
       case 4:
         if (makeTopWhite()) {
           playStep++;
-          console.log('top');
         }
         break;
       case 5:
@@ -58,15 +57,62 @@ function play() {
         }
         break;
       case 6:
+        if (alignWhiteEdges()) {
+          playStep++;
+        }
+      break;
+      case 7:
         console.log('Done');
       break;
     }
   }
 }
 
-function makeWhiteCorners() {
+function alignWhiteEdges() {
+  let topEdges = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x + qb.defaultPos.z) == 1);
+  if (topEdges.every((c) => c.pos.equals(c.defaultPos))) {
+    return true;
+  } else {
+    if (checkIfAllEdgeWrong(topEdges)) {
+      return false;
+    }
+    for (let i = 0; i < topEdges.length; i++) {
+      let qb = topEdges[i];
+      setView(qb);
+      if (checkTriEdge(topEdges)) {
+        return false;
+      }
+    }
+  }
+}
+
+function checkTriEdge(topEdges) {
+  if ((topEdges.some((c) => c.vPos.x == 1 && c.vPos.z == 0 && c.vPos.equals(c.vDefaultPos) == false)) &&
+  (topEdges.some((c) => c.vPos.x == -1 && c.vPos.z == 0 && c.vPos.equals(c.vDefaultPos) == false)) &&
+  (topEdges.some((c) => c.vPos.x == 0 && c.vPos.z == 1 && c.vPos.equals(c.vDefaultPos) == false))) {
+    let center = topEdges.find((c) => c.vPos.x == 0 && c.vPos.z == 1);
+    if (center.vDefaultPos.x == 1) { //Anti clock
+      pushTurns(['F','F','~U','L','~R','F','F','~L','R','~U','F','F']);
+    } else { //Clock
+      pushTurns(['F','F','U','L','~R','F','F','~L','R','U','F','F']);
+    }
+    return true;
+  }
+  return false;
+}
+
+
+function checkIfAllEdgeWrong(topEdges) {
+  if (topEdges.every((c) => c.pos.equals(c.defaultPos) == false)) {
+    pushTurns(['F','F','U','L','~R','F','F','~L','R','U','F','F']);
+    return true;
+  }
+  return false;
+}
+
+function alignWhiteCorners() {
   let topCorners = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x) + abs(qb.defaultPos.z) == 2);
-  if (topCorners.every((c) => c.pointer.equals(defaultRot))) {
+  if (topCorners.every((c) => c.pos.equals(c.defaultPos))) {
     return true;
   } else {
     for (let a = 0; a < 2; a++) {
@@ -75,43 +121,70 @@ function makeWhiteCorners() {
         setView(qb);
         switch(a) {
           case 0:
-            if (checkAdjacentCorners(topCorners)) {
+            if (checkTwoCorners(topCorners)) {
               return false;
             }
             break;
           case 1:
-            if (checkDiagonalCorners(topCorners)) {
-              return false;
-            }
-            break;
+            pushTurns(['U']);
+            return false;
         }
       }
    }
   }
 }
 
+function checkTwoCorners(topCorners) {
+  let backLeft = topCorners.find((qb) =>  qb.vPos.x == -1 && qb.vPos.z == -1);
+  let backRight = topCorners.find((qb) =>  qb.vPos.x == 1 && qb.vPos.z == -1);
+  let frontLeft = topCorners.find((qb) =>  qb.vPos.x == -1 && qb.vPos.z == 1);
+
+  if ((backLeft.vPos.equals(backLeft.vDefaultPos) && backRight.vPos.equals(backRight.vDefaultPos)) ||
+  (frontLeft.vPos.equals(frontLeft.vDefaultPos) && backRight.vPos.equals(backRight.vDefaultPos))) {
+    pushTurns(['~R','F','~R','B','B','R','~F','~R','B','B','R','R','~U']);
+    return true;
+  }
+  return false;
+}
+
+
 function makeTopWhite() {
   let topCorners = getCubiesAtYDefault(-1).filter((qb) => abs(qb.defaultPos.x) + abs(qb.defaultPos.z) == 2);
   if (topCorners.every((c) => c.pointer.equals(defaultRot))) {
     return true;
   } else {
-    for (let a = 0; a < 2; a++) {
+    for (let a = 0; a < 3; a++) {
       for (let i = 0; i < topCorners.length; i++) {
         let qb = topCorners[i];
         setView(qb);
         switch(a) {
           case 0:
-            if (checkTopCorner(topCorners)) {
+            if (checkBlock(topCorners)) {
               return false;
             }
             break;
           case 1:
+            if (checkTopCorner(topCorners)) {
+              return false;
+            }
+            break;
+          case 2:
             pushTurns(['R','U','~R','U','R','U','U','~R']);
             return false;
         }
       }
    }
   }
+}
+
+function checkBlock(topCorners) {
+  if (topCorners.some((qb) => qb.vPos.x == -1 && qb.vPos.z == -1 && qb.vPointer.equals(vDefaultRot))) {
+    if (topCorners.some((qb) => qb.vPos.x == 1 && qb.vPos.z == -1 && qb.vPointer.equals(vDefaultRot))) {
+      pushTurns(['~R','~D','R','D','~R','~D','R','D','~U','~R','~D','R','D','~R','~D','R','D','~R','~D','R','D','~R','~D','R','D']);
+      return true;
+    }
+  }
+  return false;
 }
 
 function checkTopCorner(topCorners) {
